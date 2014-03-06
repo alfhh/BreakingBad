@@ -26,11 +26,12 @@ import java.io.IOException;
 
 public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyListener {
 
-    private Animacion animPaleta; // Animacion de la Paleta
+    private Animacion animPaleta; // Animacion de la Paleta (Jugador)
     private Paleta paleta; // Objeto de la Paleta
     private int pMovx; // Movimiento de la Paleta
     private Image dbImage; // Imagen
     private Graphics dbg; // Objeto Grafico
+    private boolean pausa; // Flag de pausa
 
     /**
      * El metodo constructor de la clase BreakingBad
@@ -38,13 +39,21 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     public BreakingBad() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1080, 720);
+        setSize(1280, 720);
+        setTitle("Breaking Bad: The Game");
+        pausa = false;
+        
+        // Animacion de la Paleta
         Image b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/fedora.png"));
         animPaleta = new Animacion();
         animPaleta.sumaCuadro(b0, 100);
+        
+        
         paleta = new Paleta(0, 0, animPaleta);
         paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
         paleta.setPosY(this.getHeight() - paleta.getAlto());
+        
+        
         addMouseListener(this);
         addKeyListener(this);
         Thread th = new Thread(this);
@@ -53,8 +62,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
 
     public void run() {
         while (true) {
-            checaColision();
-            actualiza();
+            if (!pausa){
+             checaColision();
+             actualiza();   
+            }
             repaint();
             try {
                 Thread.sleep(50);
@@ -158,6 +169,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             pMovx = 30;
+        }
+        
+        if (e.getKeyCode() == KeyEvent.VK_P) {
+            pausa = !pausa;
         }
     }
 
