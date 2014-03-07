@@ -156,8 +156,8 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             int co = (pelota.getPosY())
                     - (paleta.getPosY());
             int h = (int) Math.sqrt(Math.pow(ca, 2) + Math.pow(co, 2));
-            peMovx = 20 * ca / h;
-            peMovy = 20 * co / h;
+            peMovx = (int) Math.ceil(20 * ca / h);
+            peMovy = (int) Math.ceil(20 * co / h);
         }
     }
 
