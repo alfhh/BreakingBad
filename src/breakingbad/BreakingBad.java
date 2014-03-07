@@ -27,6 +27,9 @@ import java.io.IOException;
 public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyListener {
 
     private Animacion animPaleta; // Animacion de la Paleta (Jugador)
+    private Animacion animDEA; // Animacion de DEA
+    private long tiempoActual;  // tiempo actual
+    private long tiempoInicial; // tiempo inicial
     private Paleta paleta; // Objeto de la Paleta
     private Animacion animPelota; // Animacion de la Pelota
     private Pelota pelota; // Objeto de Pelota
@@ -68,6 +71,36 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         pelota = new Pelota(0, 0, animPelota);
         pelota.setPosX(paleta.getPosX() + paleta.getAncho() / 2 - pelota.getAncho() / 2);
         pelota.setPosY(paleta.getPosY() - pelota.getAlto());
+        
+        // Animacion de DEA
+        Image dea1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/1.PNG"));
+        Image dea2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/2.PNG"));
+        Image dea3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/3.PNG"));
+        Image dea4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/4.PNG"));
+        Image dea5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/5.PNG"));
+        Image dea6 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/6.PNG"));
+        Image dea7 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/7.PNG"));
+        Image dea8 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/8.PNG"));
+        Image dea9 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/9.PNG"));
+        Image dea10 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/10.PNG"));
+        animDEA = new Animacion();
+        animDEA.sumaCuadro(dea1, 100);
+        animDEA.sumaCuadro(dea2, 100);
+        animDEA.sumaCuadro(dea3, 100);
+        animDEA.sumaCuadro(dea4, 100);
+        animDEA.sumaCuadro(dea5, 100);
+        animDEA.sumaCuadro(dea6, 100);
+        animDEA.sumaCuadro(dea7, 100);
+        animDEA.sumaCuadro(dea8, 100);
+        animDEA.sumaCuadro(dea9, 100);
+        animDEA.sumaCuadro(dea10, 100);       
+        
+        //paleta = new Paleta(0, 0, animPaleta);
+        paleta = new Paleta(0, 0, animDEA);
+        paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
+        paleta.setPosY((this.getHeight() - paleta.getAlto()) - 8);
+        
+        
 
         addMouseListener(this);
         addKeyListener(this);
@@ -76,6 +109,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     public void run() {
+        tiempoActual = System.currentTimeMillis();
         while (true) {
             if (!pausa && inicio) {
                 checaColision();
@@ -96,8 +130,14 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             paleta.setPosX(paleta.getPosX() + paMov);
             paMov = 0;
         }
+
         pelota.setPosX(pelota.getPosX()+peMovx);
         pelota.setPosY(pelota.getPosY()+peMovy);
+
+        long tiempoTranscurrido = System.currentTimeMillis() - tiempoActual;
+        tiempoActual += tiempoTranscurrido;
+        paleta.getAnimacion().actualiza(tiempoTranscurrido);
+
     }
 
     public void checaColision() {
