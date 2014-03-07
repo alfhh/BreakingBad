@@ -23,16 +23,22 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyListener {
 
     private Animacion animPaleta; // Animacion de la Paleta (Jugador)
     private Animacion animDEA; // Animacion de DEA
+    private Animacion animMeth; // Animacion de Meth
+    private LinkedList link; // Lista enlazada para los cuadros
+    //private int posXM; // Posicion en X del cuadro de meth
+   // private int posYM; // Posicion en Y del cuadro de meth
     private long tiempoActual;  // tiempo actual
     private long tiempoInicial; // tiempo inicial
     private Paleta paleta; // Objeto de la Paleta
     private Animacion animPelota; // Animacion de la Pelota
     private Pelota pelota; // Objeto de Pelota
+    private Meth meth; // Objeto de la clase Meth
     private int peMovy; // Movimiento de la Pelota en el eje y
     private int peMovx; // Movimiento de la Pelota en el eje x
     private int paMov; // Movimiento de la Paleta
@@ -49,6 +55,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 720);
         setTitle("Breaking Bad: The Game");
+        link = new LinkedList(); // Creacion de la lista enlazada
         pausa = false;
         inicio = false;
         peMovx = paMov = 0;
@@ -58,7 +65,21 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         Image b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/fedora.png"));
         animPaleta = new Animacion();
         animPaleta.sumaCuadro(b0, 100);
-
+        
+        // Animacion del bloque de meth
+        Image m1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/meth.png"));
+        animMeth = new Animacion();
+        animMeth.sumaCuadro(m1, 100);
+        
+        //
+        for (int i = 50; i < 236 ; i+=59) {
+            for(int j = 45; j < 1130; j+=150) {
+                link.add(new Meth(j, i, animMeth));
+            }
+        }
+        
+        
+        
         // Animacion de la Pelota
         b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota.png"));
         animPelota = new Animacion();
@@ -159,6 +180,14 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             peMovx = (int) Math.ceil(20 * ca / h);
             peMovy = (int) Math.ceil(20 * co / h);
         }
+        
+        for (int i = 0; i < link.size(); i++) {
+            meth = (Meth) (link.get(i));
+            if (pelota.intersecta(meth)) {
+                link.remove(i);
+            }
+        }
+        
     }
 
     /**
@@ -192,6 +221,11 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         }
         if (pelota.getAnimacion() != null) {
             g.drawImage(pelota.animacion.getImagen(), pelota.getPosX(), pelota.getPosY(), this);
+        }
+        
+        for (int i = 0; i < link.size(); i++) {
+            meth = (Meth) (link.get(i));
+            g.drawImage(meth.animacion.getImagen(), meth.getPosX(), meth.getPosY(), this);
         }
     }
 
