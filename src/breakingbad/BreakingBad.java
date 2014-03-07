@@ -40,6 +40,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     private Graphics dbg; // Objeto Grafico
     private boolean pausa; // Flag de pausa
     private boolean inicio; // Flag de inicio
+    private boolean tecla; // flag del teclado
 
     /**
      * El metodo constructor de la clase BreakingBad
@@ -51,6 +52,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         setTitle("Breaking Bad: The Game");
         pausa = false;
         inicio = false;
+        tecla = false;
         peMovx = paMov = 0;
         peMovy = 5;
 
@@ -60,9 +62,44 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         animPaleta.sumaCuadro(b0, 100);
 
         // Animacion de la Pelota
-        b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota.png"));
+        b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota1.png"));
+        Image b1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota2.png"));
+        Image b2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota3.png"));
+        Image b3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota4.png"));
+        Image b4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota5.png"));
+        Image b5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota6.png"));
+        Image b6 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota7.png"));
+        Image b7 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota8.png"));
+        Image b8 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota9.png"));
+        Image b9 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota10.png"));
+        Image b10 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota11.png"));
+        Image b11 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota12.png"));
+        Image b12 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota13.png"));
+        Image b13 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota14.png"));
+        Image b14 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota15.png"));
+        Image b15 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota16.png"));
+        Image b16 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota17.png"));
+        Image b17 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota18.png"));
+
         animPelota = new Animacion();
         animPelota.sumaCuadro(b0, 100);
+        animPelota.sumaCuadro(b1, 100);
+        animPelota.sumaCuadro(b2, 100);
+        animPelota.sumaCuadro(b3, 100);
+        animPelota.sumaCuadro(b4, 100);
+        animPelota.sumaCuadro(b5, 100);
+        animPelota.sumaCuadro(b6, 100);
+        animPelota.sumaCuadro(b7, 100);
+        animPelota.sumaCuadro(b8, 100);
+        animPelota.sumaCuadro(b9, 100);
+        animPelota.sumaCuadro(b10, 100);
+        animPelota.sumaCuadro(b11, 100);
+        animPelota.sumaCuadro(b12, 100);
+        animPelota.sumaCuadro(b13, 100);
+        animPelota.sumaCuadro(b14, 100);
+        animPelota.sumaCuadro(b15, 100);
+        animPelota.sumaCuadro(b16, 100);
+        animPelota.sumaCuadro(b17, 100);
 
         paleta = new Paleta(0, 0, animPaleta);
         paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
@@ -71,7 +108,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         pelota = new Pelota(0, 0, animPelota);
         pelota.setPosX(paleta.getPosX() + paleta.getAncho() / 2 - pelota.getAncho() / 2);
         pelota.setPosY(paleta.getPosY() - pelota.getAlto());
-        
+
         // Animacion de DEA
         Image dea1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/1.PNG"));
         Image dea2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/2.PNG"));
@@ -93,14 +130,12 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         animDEA.sumaCuadro(dea7, 100);
         animDEA.sumaCuadro(dea8, 100);
         animDEA.sumaCuadro(dea9, 100);
-        animDEA.sumaCuadro(dea10, 100);       
-        
+        animDEA.sumaCuadro(dea10, 100);
+
         //paleta = new Paleta(0, 0, animPaleta);
         paleta = new Paleta(0, 0, animDEA);
         paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
         paleta.setPosY((this.getHeight() - paleta.getAlto()) - 8);
-        
-        
 
         addMouseListener(this);
         addKeyListener(this);
@@ -128,24 +163,27 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         if (paleta.getPosX() + paMov > 0
                 && paleta.getPosX() + paMov + paleta.getAncho() < this.getWidth()) {
             paleta.setPosX(paleta.getPosX() + paMov);
-            paMov = 0;
         }
 
-        pelota.setPosX(pelota.getPosX()+peMovx);
-        pelota.setPosY(pelota.getPosY()+peMovy);
+        pelota.setPosX(pelota.getPosX() + peMovx);
+        pelota.setPosY(pelota.getPosY() + peMovy);
 
         long tiempoTranscurrido = System.currentTimeMillis() - tiempoActual;
         tiempoActual += tiempoTranscurrido;
         paleta.getAnimacion().actualiza(tiempoTranscurrido);
+        pelota.getAnimacion().actualiza(tiempoTranscurrido);
 
     }
 
     public void checaColision() {
-        if (pelota.getPosX() < 0 || pelota.getPosX() + pelota.getAncho() > this.getWidth()) {
-            peMovx = -peMovx;
+        if (pelota.getPosX() < 0) {
+            peMovx = Math.abs(peMovx);
         }
-        if (pelota.getPosY() < 0) {
-            peMovy = -peMovy;
+        if (pelota.getPosX() + pelota.getAncho() > this.getWidth()) {
+            peMovx = -Math.abs(peMovx);
+        }
+        if (pelota.getPosY() < 50) {
+            peMovy = Math.abs(peMovy);
         }
         if (pelota.getPosY() + pelota.getAlto() > this.getHeight()) {
 
@@ -156,7 +194,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             int co = (pelota.getPosY())
                     - (paleta.getPosY());
             int h = (int) Math.sqrt(Math.pow(ca, 2) + Math.pow(co, 2));
-            peMovx = (int) Math.ceil(20 * ca / h);
+            peMovx += (int) Math.ceil(20 * ca / h);
             peMovy = (int) Math.ceil(20 * co / h);
         }
     }
@@ -243,10 +281,12 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         if (inicio) {
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                 paMov = -30;
+                tecla = true;
             }
 
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                 paMov = 30;
+                tecla = true;
             }
 
             if (e.getKeyCode() == KeyEvent.VK_P) {
@@ -272,7 +312,8 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
      * @param e
      */
     public void keyReleased(KeyEvent e) {
-
+        paMov = 0;
+        tecla = false;
     }
 
     /**
