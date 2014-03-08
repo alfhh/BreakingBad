@@ -7,6 +7,9 @@ package breakingbad;
 
 import java.awt.Color;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Graphics;
@@ -15,6 +18,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -25,14 +30,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyListener {
+public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyListener, ActionListener {
 
     private Animacion animPaleta; // Animacion de la Paleta (Jugador)
     private Animacion animDEA; // Animacion de DEA
     private Animacion animMeth; // Animacion de Meth
     private LinkedList link; // Lista enlazada para los cuadros
-    //private int posXM; // Posicion en X del cuadro de meth
-   // private int posYM; // Posicion en Y del cuadro de meth
+    private Image background; // Imagen del Background
+    private Image backScore; // Imagen del score
+    private Image imgOver; // Imagen de Game Over
     private long tiempoActual;  // tiempo actual
     private long tiempoInicial; // tiempo inicial
     private Paleta paleta; // Objeto de la Paleta
@@ -42,46 +48,78 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     private int peMovy; // Movimiento de la Pelota en el eje y
     private int peMovx; // Movimiento de la Pelota en el eje x
     private int paMov; // Movimiento de la Paleta
+    private int score; // Variable del score
     private Image dbImage; // Imagen
     private Graphics dbg; // Objeto Grafico
     private boolean pausa; // Flag de pausa
     private boolean inicio; // Flag de inicio
     private boolean tecla; // flag del teclado
+    private boolean gOver; // Bandera de juego perdido
+    private Font myFont;
+    private JMenuBar mbGame; // Menu Bar del juego
+    private JMenu menuPrincipal; // Menu Principal
+    private JMenuItem miNuevo, miScore, miSalir; // Elementos del menu principal
 
     /**
      * El metodo constructor de la clase BreakingBad
      */
     public BreakingBad() {
 
+        // Elementos del MenuBar
+        mbGame = new JMenuBar();
+        menuPrincipal = new JMenu("Opciones");
+        miNuevo = new JMenuItem("Nuevo Juego");
+        miScore = new JMenuItem("Score");
+        miSalir = new JMenuItem("Salir");
+
+        // Agregar acciones a los botones del menu
+        miNuevo.addActionListener(this);
+        miScore.addActionListener(this);
+        miSalir.addActionListener(this);
+
+        // Adicionar los botones al Menu Principal
+        menuPrincipal.add(miNuevo);
+        menuPrincipal.add(miScore);
+        menuPrincipal.add(miSalir);
+
+        // Adicionar Menu Principal a mbGame
+        mbGame.add(menuPrincipal);
+
+        setJMenuBar(mbGame);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 720);
         setTitle("Breaking Bad: The Game");
+        myFont = new Font("Serif", Font.BOLD, 34); // Estilo de fuente
         link = new LinkedList(); // Creacion de la lista enlazada
+        score = 0;
         pausa = false;
         inicio = false;
         tecla = false;
+        gOver = false;
         peMovx = paMov = 0;
         peMovy = 5;
+
+        background = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/backBad.gif"));
+        backScore = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/backScore.png"));
+        imgOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/gOver.png"));
 
         // Animacion de la Paleta
         Image b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/fedora.png"));
         animPaleta = new Animacion();
         animPaleta.sumaCuadro(b0, 100);
-        
+
         // Animacion del bloque de meth
         Image m1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/meth.png"));
         animMeth = new Animacion();
         animMeth.sumaCuadro(m1, 100);
-        
-        //
-        for (int i = 50; i < 236 ; i+=59) {
-            for(int j = 45; j < 1130; j+=150) {
+
+        // Genera la cuadricula de cuadros de meth
+        for (int i = 50; i < 236; i += 59) {
+            for (int j = 45; j < 1130; j += 150) {
                 link.add(new Meth(j, i, animMeth));
             }
         }
-        
-        
-        
+
         // Animacion de la Pelota
         b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota1.png"));
         Image b1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota2.png"));
@@ -163,11 +201,22 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         Thread th = new Thread(this);
         th.start();
     }
+    
+    /**
+     * Maneja los eventos que suceden al accionar algun
+     * boton del JMenuBar
+     * @param e evento del MenuItem
+     */
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == miSalir) {
+            System.exit(0);
+        }
+    }
 
     public void run() {
         tiempoActual = System.currentTimeMillis();
         while (true) {
-            if (!pausa && inicio) {
+            if (!pausa && inicio && !gOver) {
                 checaColision();
                 actualiza();
             }
@@ -206,8 +255,8 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         if (pelota.getPosY() < 50) {
             peMovy = Math.abs(peMovy);
         }
-        if (pelota.getPosY() + pelota.getAlto() > this.getHeight()) {
-
+        if (pelota.getPosY() + pelota.getAlto() - 35 > this.getHeight()) {
+            gOver = true;
         }
         if (paleta.getPerimetro().intersects(pelota.getPerimetro())) {
             int ca = (pelota.getPosX() + pelota.getAncho() / 2)
@@ -218,14 +267,15 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             peMovx += (int) Math.ceil(20 * ca / h);
             peMovy = (int) Math.ceil(20 * co / h);
         }
-        
+
         for (int i = 0; i < link.size(); i++) {
             meth = (Meth) (link.get(i));
             if (pelota.intersecta(meth)) {
+                score++;
                 link.remove(i);
             }
         }
-        
+
     }
 
     /**
@@ -254,16 +304,26 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
 
     public void paint1(Graphics g) {
 
+         g.drawImage(background, 0 ,0, this);
+         g.drawImage(backScore, 0 ,0, this);
+         g.setFont(myFont); // Aplica el estilo fuente a las string
+         g.setColor(Color.white);
+         g.drawString("" + score, 25, 540);
+         
         if (paleta.getAnimacion() != null) {
             g.drawImage(paleta.animacion.getImagen(), paleta.getPosX(), paleta.getPosY(), this);
         }
         if (pelota.getAnimacion() != null) {
             g.drawImage(pelota.animacion.getImagen(), pelota.getPosX(), pelota.getPosY(), this);
         }
-        
+
         for (int i = 0; i < link.size(); i++) {
             meth = (Meth) (link.get(i));
             g.drawImage(meth.animacion.getImagen(), meth.getPosX(), meth.getPosY(), this);
+        }
+        
+        if (gOver) {
+            g.drawImage(imgOver, 0 ,0, this);
         }
     }
 
