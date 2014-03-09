@@ -217,6 +217,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         }
     }
 
+    /**
+     * 
+     */
     public void actualiza() {
         if (paleta.getPosX() + paMov > 0
                 && paleta.getPosX() + paMov + paleta.getAncho() < this.getWidth()) {
@@ -233,6 +236,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
 
     }
 
+    /**
+     * Este metodo controla los eventos de colision de la paleta
+     * y de los cuadros.
+     */
     public void checaColision() {
         if (pelota.getPosX() < 15) {
             peMovx = Math.abs(peMovx);
@@ -244,9 +251,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             peMovy = Math.abs(peMovy);
         }
         if (pelota.getPosY() + pelota.getAlto() - 35 > this.getHeight()) {
-            gOver = true;
+            gOver = true; // Acabo el juego
         }
-        if (paleta.getPerimetro().intersects(pelota.getPerimetro())) {
+        if (paleta.getPerimetro().intersects(pelota.getPerimetro())) { // Colision de pelota
             int ca = (pelota.getPosX() + pelota.getAncho() / 2)
                     - (paleta.getPosX() + paleta.getAncho() / 2);
             int co = (pelota.getPosY())
@@ -256,7 +263,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             peMovy = (int) Math.ceil(20 * co / h);
         }
 
-        for (int i = 0; i < link.size(); i++) {
+        for (int i = 0; i < link.size(); i++) { // Colision de la pelota con la paleta
             meth = (Meth) (link.get(i));
             if (pelota.intersecta(meth)) {
                 if (meth.arr().intersects(pelota.getPerimetro())
@@ -269,12 +276,15 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
                 link.remove(i);
             }
         }
+        
+        if (score == 32) { // Acabo el juego
+            gOver = true;
+        }
 
     }
 
     /**
      * Metodo que actualiza las animaciones.
-     *
      * @param g es la imagen del objeto
      */
     public void paint(Graphics g) {
@@ -296,6 +306,14 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         g.drawImage(dbImage, 0, 0, this);
     }
 
+    /**
+     * Se encarga de pintar los elementos graficos del juego.
+     * Despliega un mensaje cuando el juego termina.
+     * Despliega un icono de pausa cuando la bandera de pausa
+     * se activa.
+     * Pinta el valor del score.
+     * @param g grafico
+     */
     public void paint1(Graphics g) {
 
         g.drawImage(background, 0, 0, this);
@@ -316,6 +334,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             g.drawImage(meth.animacion.getImagen(), meth.getPosX(), meth.getPosY(), this);
         }
 
+        if (pausa) {
+           g.drawImage(imgPause, 545, 200, this); 
+        }
+        
         if (gOver) {
             g.drawImage(imgOver, 0, 0, this);
         }
