@@ -201,10 +201,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         Thread th = new Thread(this);
         th.start();
     }
-    
+
     /**
-     * Maneja los eventos que suceden al accionar algun
-     * boton del JMenuBar
+     * Maneja los eventos que suceden al accionar algun boton del JMenuBar
+     *
      * @param e evento del MenuItem
      */
     public void actionPerformed(ActionEvent e) {
@@ -246,10 +246,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     public void checaColision() {
-        if (pelota.getPosX() < 0) {
+        if (pelota.getPosX() < 15) {
             peMovx = Math.abs(peMovx);
         }
-        if (pelota.getPosX() + pelota.getAncho() > this.getWidth()) {
+        if (pelota.getPosX() + pelota.getAncho() > this.getWidth() - 15) {
             peMovx = -Math.abs(peMovx);
         }
         if (pelota.getPosY() < 50) {
@@ -264,13 +264,19 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             int co = (pelota.getPosY())
                     - (paleta.getPosY());
             int h = (int) Math.sqrt(Math.pow(ca, 2) + Math.pow(co, 2));
-            peMovx += (int) Math.ceil(20 * ca / h);
+            peMovx = (int) Math.ceil(20 * ca / h);
             peMovy = (int) Math.ceil(20 * co / h);
         }
 
         for (int i = 0; i < link.size(); i++) {
             meth = (Meth) (link.get(i));
             if (pelota.intersecta(meth)) {
+                if (meth.arr().intersects(pelota.getPerimetro())
+                        || meth.aba().intersects(pelota.getPerimetro())) {
+                    peMovy *= -1;
+                } else {
+                    peMovx *= -1;
+                }
                 score++;
                 link.remove(i);
             }
@@ -304,12 +310,12 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
 
     public void paint1(Graphics g) {
 
-         g.drawImage(background, 0 ,0, this);
-         g.drawImage(backScore, 0 ,0, this);
-         g.setFont(myFont); // Aplica el estilo fuente a las string
-         g.setColor(Color.white);
-         g.drawString("" + score, 25, 540);
-         
+        g.drawImage(background, 0, 0, this);
+        g.drawImage(backScore, 0, 0, this);
+        g.setFont(myFont); // Aplica el estilo fuente a las string
+        g.setColor(Color.white);
+        g.drawString("" + score, 25, 540);
+
         if (paleta.getAnimacion() != null) {
             g.drawImage(paleta.animacion.getImagen(), paleta.getPosX(), paleta.getPosY(), this);
         }
@@ -321,9 +327,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             meth = (Meth) (link.get(i));
             g.drawImage(meth.animacion.getImagen(), meth.getPosX(), meth.getPosY(), this);
         }
-        
+
         if (gOver) {
-            g.drawImage(imgOver, 0 ,0, this);
+            g.drawImage(imgOver, 0, 0, this);
         }
     }
 
