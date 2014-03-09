@@ -175,7 +175,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
-     * Reinicia los valores iniciales si el jugador desea jugar de nuevo.
+     * Maneja los eventos que suceden al accionar algun boton del JMenuBar
+     *
+     * @param e evento del MenuItem
      */
     public void reinicia() {
         score = 0;
@@ -232,10 +234,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     public void checaColision() {
-        if (pelota.getPosX() < 10) {
+        if (pelota.getPosX() < 15) {
             peMovx = Math.abs(peMovx);
         }
-        if (pelota.getPosX() + pelota.getAncho() > this.getWidth() - 10) {
+        if (pelota.getPosX() + pelota.getAncho() > this.getWidth() - 15) {
             peMovx = -Math.abs(peMovx);
         }
         if (pelota.getPosY() < 50) {
@@ -250,13 +252,19 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             int co = (pelota.getPosY())
                     - (paleta.getPosY());
             int h = (int) Math.sqrt(Math.pow(ca, 2) + Math.pow(co, 2));
-            peMovx += (int) Math.ceil(20 * ca / h);
+            peMovx = (int) Math.ceil(20 * ca / h);
             peMovy = (int) Math.ceil(20 * co / h);
         }
 
         for (int i = 0; i < link.size(); i++) {
             meth = (Meth) (link.get(i));
             if (pelota.intersecta(meth)) {
+                if (meth.arr().intersects(pelota.getPerimetro())
+                        || meth.aba().intersects(pelota.getPerimetro())) {
+                    peMovy *= -1;
+                } else {
+                    peMovx *= -1;
+                }
                 score++;
                 link.remove(i);
             }
