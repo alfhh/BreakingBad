@@ -18,8 +18,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,7 +28,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyListener, ActionListener {
+public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyListener {
 
     private Animacion animPaleta; // Animacion de la Paleta (Jugador)
     private Animacion animDEA; // Animacion de DEA
@@ -39,6 +37,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     private Image background; // Imagen del Background
     private Image backScore; // Imagen del score
     private Image imgOver; // Imagen de Game Over
+    private Image imgPause; // Imagen de la pausa
     private long tiempoActual;  // tiempo actual
     private long tiempoInicial; // tiempo inicial
     private Paleta paleta; // Objeto de la Paleta
@@ -56,36 +55,12 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     private boolean tecla; // flag del teclado
     private boolean gOver; // Bandera de juego perdido
     private Font myFont;
-    private JMenuBar mbGame; // Menu Bar del juego
-    private JMenu menuPrincipal; // Menu Principal
-    private JMenuItem miNuevo, miScore, miSalir; // Elementos del menu principal
 
     /**
      * El metodo constructor de la clase BreakingBad
      */
     public BreakingBad() {
 
-        // Elementos del MenuBar
-        mbGame = new JMenuBar();
-        menuPrincipal = new JMenu("Opciones");
-        miNuevo = new JMenuItem("Nuevo Juego");
-        miScore = new JMenuItem("Score");
-        miSalir = new JMenuItem("Salir");
-
-        // Agregar acciones a los botones del menu
-        miNuevo.addActionListener(this);
-        miScore.addActionListener(this);
-        miSalir.addActionListener(this);
-
-        // Adicionar los botones al Menu Principal
-        menuPrincipal.add(miNuevo);
-        menuPrincipal.add(miScore);
-        menuPrincipal.add(miSalir);
-
-        // Adicionar Menu Principal a mbGame
-        mbGame.add(menuPrincipal);
-
-        setJMenuBar(mbGame);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1280, 720);
         setTitle("Breaking Bad: The Game");
@@ -102,6 +77,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         background = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/backBad.gif"));
         backScore = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/backScore.png"));
         imgOver = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/gOver.png"));
+        imgPause = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pause.png"));
 
         // Animacion de la Paleta
         Image b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/fedora.png"));
@@ -160,14 +136,6 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         animPelota.sumaCuadro(b16, 100);
         animPelota.sumaCuadro(b17, 100);
 
-        paleta = new Paleta(0, 0, animPaleta);
-        paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
-        paleta.setPosY(this.getHeight() - paleta.getAlto() - 10);
-
-        pelota = new Pelota(0, 0, animPelota);
-        pelota.setPosX(paleta.getPosX() + paleta.getAncho() / 2 - pelota.getAncho() / 2);
-        pelota.setPosY(paleta.getPosY() - pelota.getAlto());
-
         // Animacion de DEA
         Image dea1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/1.PNG"));
         Image dea2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/2.PNG"));
@@ -196,21 +164,39 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
         paleta.setPosY((this.getHeight() - paleta.getAlto()) - 8);
 
+        pelota = new Pelota(0, 0, animPelota);
+        pelota.setPosX(paleta.getPosX() + paleta.getAncho() / 2 - pelota.getAncho() / 2);
+        pelota.setPosY(paleta.getPosY() - pelota.getAlto());
+
         addMouseListener(this);
         addKeyListener(this);
         Thread th = new Thread(this);
         th.start();
     }
-    
+
     /**
-     * Maneja los eventos que suceden al accionar algun
-     * boton del JMenuBar
-     * @param e evento del MenuItem
+     * Reinicia los valores iniciales si el jugador desea jugar de nuevo.
      */
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == miSalir) {
-            System.exit(0);
+    public void reinicia() {
+        score = 0;
+        pausa = false;
+        inicio = false;
+        tecla = false;
+        gOver = false;
+        peMovx = paMov = 0;
+        peMovy = 5;
+
+        paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
+        paleta.setPosY((this.getHeight() - paleta.getAlto()) - 8);
+        pelota.setPosX(paleta.getPosX() + paleta.getAncho() / 2 - pelota.getAncho() / 2);
+        pelota.setPosY(paleta.getPosY() - pelota.getAlto());
+        link.clear();
+        for (int i = 50; i < 236; i += 59) {
+            for (int j = 45; j < 1130; j += 150) {
+                link.add(new Meth(j, i, animMeth));
+            }
         }
+
     }
 
     public void run() {
@@ -246,10 +232,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     public void checaColision() {
-        if (pelota.getPosX() < 0) {
+        if (pelota.getPosX() < 10) {
             peMovx = Math.abs(peMovx);
         }
-        if (pelota.getPosX() + pelota.getAncho() > this.getWidth()) {
+        if (pelota.getPosX() + pelota.getAncho() > this.getWidth() - 10) {
             peMovx = -Math.abs(peMovx);
         }
         if (pelota.getPosY() < 50) {
@@ -304,12 +290,12 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
 
     public void paint1(Graphics g) {
 
-         g.drawImage(background, 0 ,0, this);
-         g.drawImage(backScore, 0 ,0, this);
-         g.setFont(myFont); // Aplica el estilo fuente a las string
-         g.setColor(Color.white);
-         g.drawString("" + score, 25, 540);
-         
+        g.drawImage(background, 0, 0, this);
+        g.drawImage(backScore, 0, 0, this);
+        g.setFont(myFont); // Aplica el estilo fuente a las string
+        g.setColor(Color.white);
+        g.drawString("" + score, 25, 694);
+
         if (paleta.getAnimacion() != null) {
             g.drawImage(paleta.animacion.getImagen(), paleta.getPosX(), paleta.getPosY(), this);
         }
@@ -321,9 +307,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             meth = (Meth) (link.get(i));
             g.drawImage(meth.animacion.getImagen(), meth.getPosX(), meth.getPosY(), this);
         }
-        
+
         if (gOver) {
-            g.drawImage(imgOver, 0 ,0, this);
+            g.drawImage(imgOver, 0, 0, this);
         }
     }
 
@@ -390,6 +376,12 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         }
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             inicio = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+            if(gOver) {
+                reinicia();
+            }
         }
     }
 
