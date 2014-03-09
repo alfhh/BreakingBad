@@ -15,11 +15,25 @@ public class Meth extends Base {
         super(posX, posY, animacion);
     }
 
+    /**
+     * Metodo arr
+     *
+     * Regresa un rectangulo de la parte de arriba del objeto
+     *
+     * @return rectangulo de arriba
+     */
     public Rectangle arr() {
         return (new Rectangle(this.getPosX() + 19, this.getPosY(),
                 this.getAncho() - 19, 20));
     }
 
+    /**
+     * Metodo aba
+     *
+     * Regresa un rectangulo de la parte de abajo del objeto
+     *
+     * @return rectangulo de abajo
+     */
     public Rectangle aba() {
         return (new Rectangle(this.getPosX() + 19, this.getPosY() + this.getAlto() - 20,
                 this.getAncho() - 19, 20));

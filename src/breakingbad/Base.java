@@ -3,8 +3,6 @@
  * @author Alfredo Hinojosa Huerta A01036053
  * @version 1.00 02/24/2014
  */
-
-
 package breakingbad;
 
 import java.awt.Image;
@@ -12,7 +10,7 @@ import javax.swing.ImageIcon;
 import java.awt.Rectangle;
 
 public class Base {
-    
+
     private int posX;    //posicion en x.       
     private int posY;	//posicion en y.
     private ImageIcon icono;    //icono.
@@ -25,7 +23,7 @@ public class Base {
      * @param posY es la <code>posicion en y</code> del objeto.
      * @param animacion es la <code>animacion</code> del objeto.
      */
-    public Base (int posX, int posY, Animacion animacion) {
+    public Base(int posX, int posY, Animacion animacion) {
         this.posX = posX;
         this.posY = posY;
         this.animacion = animacion;
@@ -36,7 +34,7 @@ public class Base {
      *
      * @param posX es la <code>posicion en x</code> del objeto.
      */
-    public void setPosX (int posX) {
+    public void setPosX(int posX) {
         this.posX = posX;
     }
 
@@ -45,7 +43,7 @@ public class Base {
      *
      * @return posX es la <code>posicion en x</code> del objeto.
      */
-    public int getPosX () {
+    public int getPosX() {
         return posX;
     }
 
@@ -54,7 +52,7 @@ public class Base {
      *
      * @param posY es la <code>posicion en y</code> del objeto.
      */
-    public void setPosY (int posY) {
+    public void setPosY(int posY) {
         this.posY = posY;
     }
 
@@ -63,17 +61,28 @@ public class Base {
      *
      * @return posY es la <code>posicion en y</code> del objeto.
      */
-    public int getPosY () {
+    public int getPosY() {
         return posY;
     }
 
-    // Metodo que ajusta la imagen del objeto
-    public void setAnimacion (Animacion anim) {
+    /**
+     *Metodo setAnimacion
+     * 
+     * Metodo que cambia la animacion
+     * 
+     * @param anim que es la animacion a la cual se desea cambiar
+     */
+    public void setAnimacion(Animacion anim) {
         this.animacion = anim;
     }
 
-    // Metodo que regresa la imagen
-    public Animacion getAnimacion () {
+    /**
+     * Metodo getAnimacion
+     * Metodo que regresa la animacion
+     * 
+     * @return animacion que es la animacion del objeto
+     */
+    public Animacion getAnimacion() {
         return this.animacion;
     }
 
@@ -83,7 +92,7 @@ public class Base {
      * @return un objeto de la clase <code>ImageIcon</code> que es el ancho del
      * icono.
      */
-    public int getAncho () {
+    public int getAncho() {
         return new ImageIcon(this.animacion.getImagen()).getIconWidth();
     }
 
@@ -93,7 +102,7 @@ public class Base {
      * @return un objeto de la clase <code>ImageIcon</code> que es el alto del
      * icono.
      */
-    public int getAlto () {
+    public int getAlto() {
         return new ImageIcon(this.animacion.getImagen()).getIconHeight();
     }
 
@@ -103,7 +112,7 @@ public class Base {
      * @return un objeto de la clase <code>Rectangle</code> que es el perimetro
      * del rectangulo
      */
-    public Rectangle getPerimetro () {
+    public Rectangle getPerimetro() {
         return new Rectangle(getPosX(), getPosY(), getAncho(), getAlto());
     }
 
@@ -114,8 +123,8 @@ public class Base {
      * @return un valor boleano <code>true</code> si lo intersecta
      * <code>false</code> en caso contrario
      */
-    public boolean intersecta (Base obj) {
+    public boolean intersecta(Base obj) {
         return getPerimetro().intersects(obj.getPerimetro());
     }
-    
+
 }
