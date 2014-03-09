@@ -70,7 +70,7 @@ public class Base {
      * 
      * Metodo que cambia la animacion
      * 
-     * @param anim que es la animacion a la cual se desea cambiar
+     * @param anim que es de la clase <code>Animacion</code> que es la animacion a la cual se desea cambiar
      */
     public void setAnimacion(Animacion anim) {
         this.animacion = anim;
@@ -80,7 +80,7 @@ public class Base {
      * Metodo getAnimacion
      * Metodo que regresa la animacion
      * 
-     * @return animacion que es la animacion del objeto
+     * @return animacion que es de la clase <code>Animacion</code> que es la animacion del objeto
      */
     public Animacion getAnimacion() {
         return this.animacion;

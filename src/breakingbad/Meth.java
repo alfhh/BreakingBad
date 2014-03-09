@@ -20,7 +20,7 @@ public class Meth extends Base {
      *
      * Regresa un rectangulo de la parte de arriba del objeto
      *
-     * @return rectangulo de arriba
+     * @return rectangulo de arriba que es de tipo <code>Animacion</code>
      */
     public Rectangle arr() {
         return (new Rectangle(this.getPosX() + 19, this.getPosY(),
@@ -32,7 +32,7 @@ public class Meth extends Base {
      *
      * Regresa un rectangulo de la parte de abajo del objeto
      *
-     * @return rectangulo de abajo
+     * @return rectangulo de abajo que es de tipo <code>Animacion</code>
      */
     public Rectangle aba() {
         return (new Rectangle(this.getPosX() + 19, this.getPosY() + this.getAlto() - 20,

@@ -173,9 +173,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
-     * Maneja los eventos que suceden al accionar algun boton del JMenuBar
-     *
-     * @param e evento del MenuItem
+     *Metodo reinicia
+     * 
+     * reinicia el juego cuando se pierde
+     * 
      */
     public void reinicia() {
         score = 0;
@@ -203,6 +204,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
      * Metodo run
      *
      * Corre el JFrame
+     * 
      */
     public void run() {
         tiempoActual = System.currentTimeMillis();
@@ -224,6 +226,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
      * Metodo actualiza
      *
      * Actualiza las posiciones de los objetos asi como las imagenes de éstos
+     * 
      */
     public void actualiza() {
         if (paleta.getPosX() + paMov > 0
@@ -242,8 +245,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
-     * Este metodo controla los eventos de colision de la paleta y de los
-     * cuadros.
+     * Metodo checaColision
+     * 
+     * Checa si hay colision entre los objetos
+     * 
      */
     public void checaColision() {
         // Regresa la pelota si se sale del applet
