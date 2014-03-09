@@ -55,6 +55,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     private boolean gOver; // Bandera de juego perdido
     private SoundClip crash; // Sonido de romper el bloque
     private SoundClip siren; // Sonido de pegarle a la pelota
+    private SoundClip gameOver; // Sonido de Game Over
     private Font myFont;
 
     /**
@@ -154,7 +155,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         animPelota.sumaCuadro(b16, 100);
         animPelota.sumaCuadro(b17, 100);
 
-        //paleta = new Paleta(0, 0, animPaleta);
+        //definicion de paleta
         paleta = new Paleta(0, 0, animPaleta);
         paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
         paleta.setPosY((this.getHeight() - paleta.getAlto()) - 8);
@@ -162,6 +163,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         // definicion de sonidos
         crash = new SoundClip("sounds/crash.wav");
         siren = new SoundClip("sounds/siren.wav");
+        gameOver = new SoundClip("sounds/GameOver.wav");
+        
+        //definicion de pelota
         pelota = new Pelota(0, 0, animPelota);
         pelota.setPosX(paleta.getPosX() + paleta.getAncho() / 2 - pelota.getAncho() / 2);
         pelota.setPosY(paleta.getPosY() - pelota.getAlto());
@@ -266,6 +270,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         // Si la pelota se cae 
         if (pelota.getPosY() + pelota.getAlto() - 35 > this.getHeight()) {
             gOver = true; // Acabo el juego
+            gameOver.play();
         }
 
         // Colision de pelota con la paleta
