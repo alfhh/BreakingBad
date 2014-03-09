@@ -54,6 +54,8 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     private boolean inicio; // Flag de inicio
     private boolean tecla; // flag del teclado
     private boolean gOver; // Bandera de juego perdido
+    private SoundClip crash; // Sonido de romper el bloque
+    private SoundClip siren; // Sonido de pegarle a la pelota
     private Font myFont;
 
     /**
@@ -164,9 +166,14 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
         paleta.setPosY((this.getHeight() - paleta.getAlto()) - 8);
 
+
+        // definicion de sonidos
+        crash = new SoundClip("sounds/crash.wav");
+        siren = new SoundClip("sounds/siren.wav");
         pelota = new Pelota(0, 0, animPelota);
         pelota.setPosX(paleta.getPosX() + paleta.getAncho() / 2 - pelota.getAncho() / 2);
         pelota.setPosY(paleta.getPosY() - pelota.getAlto());
+
 
         addMouseListener(this);
         addKeyListener(this);
@@ -261,6 +268,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             int h = (int) Math.sqrt(Math.pow(ca, 2) + Math.pow(co, 2));
             peMovx = (int) Math.ceil(20 * ca / h);
             peMovy = (int) Math.ceil(20 * co / h);
+            siren.play();
         }
 
         for (int i = 0; i < link.size(); i++) { // Colision de la pelota con la paleta
@@ -273,6 +281,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
                     peMovx *= -1;
                 }
                 score++;
+                crash.play();
                 link.remove(i);
             }
         }
