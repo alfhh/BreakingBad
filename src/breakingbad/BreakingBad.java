@@ -457,13 +457,4 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         paMov = 0;
         tecla = false;
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        BreakingBad meth = new BreakingBad();
-        meth.setVisible(true);
-    }
-
 }
