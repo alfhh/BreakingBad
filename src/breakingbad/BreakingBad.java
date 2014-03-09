@@ -31,7 +31,6 @@ import java.util.LinkedList;
 public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyListener {
 
     private Animacion animPaleta; // Animacion de la Paleta (Jugador)
-    private Animacion animDEA; // Animacion de DEA
     private Animacion animMeth; // Animacion de Meth
     private LinkedList link; // Lista enlazada para los cuadros
     private Image background; // Imagen del Background
@@ -56,6 +55,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     private boolean gOver; // Bandera de juego perdido
     private SoundClip crash; // Sonido de romper el bloque
     private SoundClip siren; // Sonido de pegarle a la pelota
+    private SoundClip gameOver; // Sonido de Game Over
     private Font myFont;
 
     /**
@@ -82,9 +82,27 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         imgPause = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pause.png"));
 
         // Animacion de la Paleta
-        Image b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/fedora.png"));
+        Image dea1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/1.PNG"));
+        Image dea2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/2.PNG"));
+        Image dea3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/3.PNG"));
+        Image dea4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/4.PNG"));
+        Image dea5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/5.PNG"));
+        Image dea6 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/6.PNG"));
+        Image dea7 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/7.PNG"));
+        Image dea8 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/8.PNG"));
+        Image dea9 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/9.PNG"));
+        Image dea10 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/10.PNG"));
         animPaleta = new Animacion();
-        animPaleta.sumaCuadro(b0, 100);
+        animPaleta.sumaCuadro(dea1, 100);
+        animPaleta.sumaCuadro(dea2, 100);
+        animPaleta.sumaCuadro(dea3, 100);
+        animPaleta.sumaCuadro(dea4, 100);
+        animPaleta.sumaCuadro(dea5, 100);
+        animPaleta.sumaCuadro(dea6, 100);
+        animPaleta.sumaCuadro(dea7, 100);
+        animPaleta.sumaCuadro(dea8, 100);
+        animPaleta.sumaCuadro(dea9, 100);
+        animPaleta.sumaCuadro(dea10, 100);
 
         // Animacion del bloque de meth
         Image m1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/meth.png"));
@@ -99,7 +117,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         }
 
         // Animacion de la Pelota
-        b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota1.png"));
+        Image b0 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota1.png"));
         Image b1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota2.png"));
         Image b2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota3.png"));
         Image b3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota4.png"));
@@ -117,7 +135,6 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         Image b15 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota16.png"));
         Image b16 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota17.png"));
         Image b17 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/pelota18.png"));
-
         animPelota = new Animacion();
         animPelota.sumaCuadro(b0, 100);
         animPelota.sumaCuadro(b1, 100);
@@ -138,42 +155,20 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         animPelota.sumaCuadro(b16, 100);
         animPelota.sumaCuadro(b17, 100);
 
-        // Animacion de DEA
-        Image dea1 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/1.PNG"));
-        Image dea2 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/2.PNG"));
-        Image dea3 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/3.PNG"));
-        Image dea4 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/4.PNG"));
-        Image dea5 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/5.PNG"));
-        Image dea6 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/6.PNG"));
-        Image dea7 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/7.PNG"));
-        Image dea8 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/8.PNG"));
-        Image dea9 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/9.PNG"));
-        Image dea10 = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("images/10.PNG"));
-        animDEA = new Animacion();
-        animDEA.sumaCuadro(dea1, 100);
-        animDEA.sumaCuadro(dea2, 100);
-        animDEA.sumaCuadro(dea3, 100);
-        animDEA.sumaCuadro(dea4, 100);
-        animDEA.sumaCuadro(dea5, 100);
-        animDEA.sumaCuadro(dea6, 100);
-        animDEA.sumaCuadro(dea7, 100);
-        animDEA.sumaCuadro(dea8, 100);
-        animDEA.sumaCuadro(dea9, 100);
-        animDEA.sumaCuadro(dea10, 100);
-
-        //paleta = new Paleta(0, 0, animPaleta);
-        paleta = new Paleta(0, 0, animDEA);
+        //definicion de paleta
+        paleta = new Paleta(0, 0, animPaleta);
         paleta.setPosX(this.getWidth() / 2 - paleta.getAncho() / 2);
         paleta.setPosY((this.getHeight() - paleta.getAlto()) - 8);
-
 
         // definicion de sonidos
         crash = new SoundClip("sounds/crash.wav");
         siren = new SoundClip("sounds/siren.wav");
+        gameOver = new SoundClip("sounds/GameOver.wav");
+        
+        //definicion de pelota
         pelota = new Pelota(0, 0, animPelota);
         pelota.setPosX(paleta.getPosX() + paleta.getAncho() / 2 - pelota.getAncho() / 2);
         pelota.setPosY(paleta.getPosY() - pelota.getAlto());
-
 
         addMouseListener(this);
         addKeyListener(this);
@@ -182,9 +177,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
-     * Maneja los eventos que suceden al accionar algun boton del JMenuBar
-     *
-     * @param e evento del MenuItem
+     *Metodo reinicia
+     * 
+     * reinicia el juego cuando se pierde
+     * 
      */
     public void reinicia() {
         score = 0;
@@ -208,6 +204,12 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
 
     }
 
+    /**
+     * Metodo run
+     *
+     * Corre el JFrame
+     * 
+     */
     public void run() {
         tiempoActual = System.currentTimeMillis();
         while (true) {
@@ -225,6 +227,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
+     * Metodo actualiza
+     *
+     * Actualiza las posiciones de los objetos asi como las imagenes de éstos
      * 
      */
     public void actualiza() {
@@ -244,10 +249,14 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
-     * Este metodo controla los eventos de colision de la paleta
-     * y de los cuadros.
+     * Metodo checaColision
+     * 
+     * Checa si hay colision entre los objetos
+     * 
      */
     public void checaColision() {
+        // Regresa la pelota si se sale del applet
+
         if (pelota.getPosX() < 15) {
             peMovx = Math.abs(peMovx);
         }
@@ -257,10 +266,15 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         if (pelota.getPosY() < 50) {
             peMovy = Math.abs(peMovy);
         }
+
+        // Si la pelota se cae 
         if (pelota.getPosY() + pelota.getAlto() - 35 > this.getHeight()) {
             gOver = true; // Acabo el juego
+            gameOver.play();
         }
-        if (paleta.getPerimetro().intersects(pelota.getPerimetro())) { // Colision de pelota
+
+        // Colision de pelota con la paleta
+        if (paleta.getPerimetro().intersects(pelota.getPerimetro())) {
             int ca = (pelota.getPosX() + pelota.getAncho() / 2)
                     - (paleta.getPosX() + paleta.getAncho() / 2);
             int co = (pelota.getPosY())
@@ -271,7 +285,8 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
             siren.play();
         }
 
-        for (int i = 0; i < link.size(); i++) { // Colision de la pelota con la paleta
+        // Colision de la pelota con la meth
+        for (int i = 0; i < link.size(); i++) {
             meth = (Meth) (link.get(i));
             if (pelota.intersecta(meth)) {
                 if (meth.arr().intersects(pelota.getPerimetro())
@@ -285,8 +300,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
                 link.remove(i);
             }
         }
-        
-        if (score == 32) { // Acabo el juego
+
+        // Acabo el juego
+        if (score == 32) {
             gOver = true;
         }
 
@@ -294,6 +310,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
 
     /**
      * Metodo que actualiza las animaciones.
+     *
      * @param g es la imagen del objeto
      */
     public void paint(Graphics g) {
@@ -316,11 +333,10 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
-     * Se encarga de pintar los elementos graficos del juego.
-     * Despliega un mensaje cuando el juego termina.
-     * Despliega un icono de pausa cuando la bandera de pausa
-     * se activa.
-     * Pinta el valor del score.
+     * Se encarga de pintar los elementos graficos del juego. Despliega un
+     * mensaje cuando el juego termina. Despliega un icono de pausa cuando la
+     * bandera de pausa se activa. Pinta el valor del score.
+     *
      * @param g grafico
      */
     public void paint1(Graphics g) {
@@ -344,15 +360,16 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         }
 
         if (pausa) {
-           g.drawImage(imgPause, 545, 200, this); 
+            g.drawImage(imgPause, 545, 200, this);
         }
-        
+
         if (gOver) {
             g.drawImage(imgOver, 0, 0, this);
         }
     }
 
     /**
+     * Metodo mouseReleased
      *
      * @param e
      */
@@ -361,6 +378,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
+     * Metodo mousePressed
      *
      * @param e
      */
@@ -369,6 +387,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
+     * Metodo mouseClicked
      *
      * @param e
      */
@@ -377,6 +396,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
+     * Metodo mouseEntered
      *
      * @param e
      */
@@ -385,6 +405,7 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
+     * Metodo mouseExited
      *
      * @param e
      */
@@ -393,6 +414,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
+     * Metodo KeyPressed
+     *
+     * Metodo que cambia valores de movimiento, pausa, iniciar y reiniciar
      *
      * @param e
      */
@@ -418,13 +442,14 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
         }
 
         if (e.getKeyCode() == KeyEvent.VK_R) {
-            if(gOver) {
+            if (gOver) {
                 reinicia();
             }
         }
     }
 
     /**
+     * Metodo keyTyped
      *
      * @param e
      */
@@ -433,6 +458,9 @@ public class BreakingBad extends JFrame implements Runnable, MouseListener, KeyL
     }
 
     /**
+     * Metodo keyReleased
+     *
+     * Metodo que revierte algunos valores cuando se suelta el teclado
      *
      * @param e
      */
